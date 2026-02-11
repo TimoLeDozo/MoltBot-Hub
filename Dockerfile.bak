@@ -1,0 +1,12 @@
+FROM node:24-slim
+
+# 1. INSTALLATION DE GIT (C'est ce qui manquait !)
+RUN apt-get update && apt-get install -y git procps && rm -rf /var/lib/apt/lists/*
+
+# 2. Installation de Clawdbot (Maintenant ça va marcher car Git est là)
+RUN npm install -g clawdbot
+
+WORKDIR /app
+
+# 3. Lancement du bot
+CMD ["clawdbot", "gateway", "--port", "18789", "--bind", "lan"]

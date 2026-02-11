@@ -1,0 +1,19 @@
+{
+  "name": "@clawdbot/skill-brave-search",
+  "version": "1.0.0",
+  "description": "Web search using Brave Search API (2000 free queries/month)",
+  "main": "index.js",
+  "bin": {
+    "brave-search": "./search.js"
+  },
+  "keywords": ["clawdbot", "skill", "web-search", "brave"],
+  "author": "TimoLeDozo",
+  "license": "MIT",
+  "clawdbot": {
+    "skill": {
+      "trigger": "Use when user asks to search the web, find current information, or get real-time data from the internet. Examples: 'search for X', 'find information about Y', 'what is the price of Z'",
+      "command": "node search.js",
+      "requiresApproval": false
+    }
+  }
+}

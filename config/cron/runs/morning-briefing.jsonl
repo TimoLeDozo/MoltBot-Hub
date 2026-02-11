@@ -1,0 +1,1 @@
+{"ts":1770796802397,"jobId":"morning-briefing","action":"finished","status":"error","error":"cron announce delivery failed","summary":"HTTP 404: 404 page not found","sessionId":"75cd5d40-3375-41d4-b18b-4667ad53f3b4","sessionKey":"agent:main:cron:morning-briefing:run:75cd5d40-3375-41d4-b18b-4667ad53f3b4","runAtMs":1770796800077,"durationMs":2286,"nextRunAtMs":1770883200000}

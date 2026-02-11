@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "morning-briefing",
+      "name": "Morning Briefing",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Cherche les actualités tech IA des dernières 24h via DuckDuckGo, résume-les et envoie-les sur Telegram."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1770883200000,
+        "lastRunAtMs": 1770796800077,
+        "lastStatus": "error",
+        "lastDurationMs": 2286,
+        "lastError": "cron announce delivery failed",
+        "consecutiveErrors": 1
+      },
+      "updatedAtMs": 1770796802363
+    }
+  ]
+}
