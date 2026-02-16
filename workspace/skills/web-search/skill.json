@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Search the web using Brave Search API (2000 free queries/month)",
   "trigger": "Use this skill when the user asks to search the web, find information online, or get current data from the internet.",
-  "command": "/app/workspace/skills/web-search/search.sh",
+  "command": "node /app/workspace/skills/web-search/search.js",
   "examples": [
     "Search the web for 'Bitcoin price February 2026'",
     "Find information about Kimi K2.5 AI model",

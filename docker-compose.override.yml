@@ -1,35 +1,21 @@
-# Docker Compose Override pour Proxy Squid
-# Ce fichier étend docker-compose.yml automatiquement
+# Docker Compose override for shared network aliases only.
 
 services:
-  # Service Squid Proxy avec whitelist de domaines
-  squid:
-    image: ubuntu/squid:latest
-    container_name: openclaw_proxy
-    restart: unless-stopped
-    volumes:
-      - ./squid.conf:/etc/squid/squid.conf:ro
-      - squid_logs:/var/log/squid
+  openclaw_proxy:
     networks:
-      - openclaw_network
+      openclaw_network:
+        aliases:
+          - openclaw_proxy
+          - squid
 
-  # Configuration du bot pour utiliser le proxy
   moltbot:
-    environment:
-      # Variables proxy pour toutes les connexions HTTP/HTTPS
-      - HTTP_PROXY=http://squid:3128
-      - HTTPS_PROXY=http://squid:3128
-      - http_proxy=http://squid:3128
-      - https_proxy=http://squid:3128
-      # Ne pas utiliser le proxy pour Ollama (local)
-      - NO_PROXY=localhost,127.0.0.1,host.docker.internal
-      - no_proxy=localhost,127.0.0.1,host.docker.internal
     networks:
-      - openclaw_network
+      openclaw_network:
+        aliases:
+          - moltbot_hub
     depends_on:
-      - squid
+      - openclaw_proxy
 
-# Réseau partagé entre le bot et le proxy
 networks:
   openclaw_network:
     driver: bridge
@@ -37,6 +23,5 @@ networks:
       config:
         - subnet: 172.25.0.0/24
 
-# Volume pour les logs Squid
 volumes:
   squid_logs:

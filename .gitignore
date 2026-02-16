@@ -1,5 +1,42 @@
+# Secrets
 .env
+test_nvidia.sh
+payload.ps1
+payload.sh
+payload.json
+
+# IDE
 .vscode/
 __pycache__/
 *.pyc
 nul
+
+# OpenClaw runtime state (contains resolved API keys)
+config/sandboxes/main/agent/
+config/sandboxes/main/sessions/
+config/agents/main/agent/
+config/agents/main/sessions/
+config/memory/
+config/cron/runs/
+config/agents/**/agent/
+config/agents/**/sessions/
+config/sandboxes/*/agent/
+config/sandboxes/*/sessions/
+config/**/runs/
+config/**/memory/
+config/**/agent/
+config/**/sessions/
+config/**/agent/models.json
+config/**/sessions/sessions.json
+config/**/sessions/*.jsonl
+config/**/runs/*.jsonl
+config/**/memory/*.sqlite*
+workspace/TRAVEL_LOG.md
+
+# Node modules (rebuild inside container)
+node_modules/
+workspace/skills/**/node_modules/
+workspace/skills/**/npm-debug.log*
+
+# Lock files
+*.lock

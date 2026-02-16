@@ -1,11 +1,23 @@
 services:
+  openclaw_proxy:
+    image: ubuntu/squid:latest
+    container_name: openclaw_proxy
+    restart: unless-stopped
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf:ro
+      - squid_logs:/var/log/squid
+
   moltbot:
     build: .
     container_name: moltbot_hub
     volumes:
-      - ./config:/root/.clawdbot
       - ./config/clawdbot.json:/root/.openclaw/openclaw.json
       - ./config/cron:/root/.openclaw/cron
+      - ./config/sandboxes/main/AGENTS.md:/root/.openclaw/workspace/AGENTS.md
+      - ./config/sandboxes/main/BOOTSTRAP.md:/root/.openclaw/workspace/BOOTSTRAP.md
+      - ./config/sandboxes/main/SOUL.md:/root/.openclaw/workspace/SOUL.md
+      - ./config/sandboxes/main/TOOLS.md:/root/.openclaw/workspace/TOOLS.md
+      - C:/Users/timca/AppData/Local/Temp:/host/windows/temp
       - ./workspace:/app/workspace
       - ./workspace/skills:/app/skills
     environment:
@@ -14,9 +26,17 @@ services:
       - OLLAMA_API_KEY=ollama-local
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_TOKEN}
       - GOOGLE_AI_STUDIO_KEY=${GOOGLE_API_KEY}
-      - BRAVE_API_KEY=BSAtXC53giNg_egvlOCWC2QLCGz6e3Q
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - BRAVE_API_KEY=${BRAVE_API_KEY}
+      - HTTP_PROXY=http://openclaw_proxy:3128
+      - HTTPS_PROXY=http://openclaw_proxy:3128
+      - GLOBAL_AGENT_HTTP_PROXY=http://openclaw_proxy:3128
+      - GLOBAL_AGENT_NO_PROXY=localhost,127.0.0.1,host.docker.internal,ollama,openclaw_proxy
+      - NO_PROXY=localhost,127.0.0.1,host.docker.internal,ollama
+      - NODE_TLS_REJECT_UNAUTHORIZED=1
+      - HOST_WINDOWS_TEMP=/host/windows/temp
       # Configuration Chromium sans sandbox
-      - PLAYWRIGHT_CHROMIUM_ARGS=--no-sandbox --disable-setuid-sandbox
+      - PLAYWRIGHT_CHROMIUM_ARGS=--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage
       - PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
     ports:
       - "18789:18789"
@@ -25,8 +45,8 @@ services:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
 
-    # Configuration IPC pour Chromium (mémoire partagée)
-    ipc: host
+    # Mémoire partagée pour Chromium (sans exposer l'IPC hôte)
+    shm_size: '512m'
 
     # Restrictions de sécurité - Isolation du système hôte
     security_opt:
@@ -57,3 +77,12 @@ services:
         max-size: "10m"
         max-file: "3"
         labels: "service=openclaw,env=production"
+    depends_on:
+      - openclaw_proxy
+    networks:
+      default:
+        aliases:
+          - moltbot_hub
+
+volumes:
+  squid_logs:

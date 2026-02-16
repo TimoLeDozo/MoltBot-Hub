@@ -2,6 +2,7 @@ FROM node:24-slim
 
 # Installation des dépendances système pour Playwright Chromium
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
     git \
     procps \
     # Dépendances Chromium essentielles
@@ -27,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Installation d'OpenClaw (dernière version - anciennement Clawdbot/Moltbot)
-RUN npm install -g openclaw@latest clawhub
+RUN npm install -g openclaw@2026.2.15 clawhub
 
 # Installation de Playwright Chromium
 # Désactiver le sandbox Playwright (utiliser le flag --no-sandbox via env var)

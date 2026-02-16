@@ -6,7 +6,12 @@
   "bin": {
     "brave-search": "./search.js"
   },
-  "keywords": ["clawdbot", "skill", "web-search", "brave"],
+  "keywords": [
+    "clawdbot",
+    "skill",
+    "web-search",
+    "brave"
+  ],
   "author": "TimoLeDozo",
   "license": "MIT",
   "clawdbot": {
@@ -15,5 +20,8 @@
       "command": "node search.js",
       "requiresApproval": false
     }
+  },
+  "dependencies": {
+    "undici": "^7.21.0"
   }
 }

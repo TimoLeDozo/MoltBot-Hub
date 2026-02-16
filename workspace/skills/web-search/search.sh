@@ -3,7 +3,7 @@
 # Usage: search.sh "query"
 
 QUERY="$1"
-API_KEY="BSAtXC53giNg_egvlOCWC2QLCGz6e3Q"
+API_KEY="${BRAVE_API_KEY}"
 
 if [ -z "$QUERY" ]; then
   echo "Usage: search.sh \"query\""
