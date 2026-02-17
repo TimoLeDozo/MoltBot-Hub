@@ -20,6 +20,9 @@ services:
       - C:/Users/timca/AppData/Local/Temp:/host/windows/temp
       - ./workspace:/app/workspace
       - ./workspace/skills:/app/skills
+      # Gateway device pairing + identity (persiste le pairing entre recreations)
+      - ./config/devices:/root/.openclaw/devices
+      - ./config/identity:/root/.openclaw/identity
     environment:
       # Configuration Ollama pour Clawdbot
       - OLLAMA_HOST=http://host.docker.internal:11434
@@ -38,6 +41,8 @@ services:
       # Configuration Chromium sans sandbox
       - PLAYWRIGHT_CHROMIUM_ARGS=--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage
       - PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
+      # Gateway token pour auth interne (browser tool, subagents)
+      - OPENCLAW_GATEWAY_TOKEN=5abf4030a02b435353181a2fa2f6de719a252643c004f07ca58b69cf79e0ab4d
     ports:
       - "18789:18789"
     # C'est ICI que la magie opère (ne supprime pas ça !)

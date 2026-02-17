@@ -353,6 +353,8 @@ Moltbot-Hub/
 | `./config/sandboxes/` | `/root/.openclaw/agents/` | Profils agent (SOUL.md, etc.) |
 | `./config/sandboxes/main/SOUL.md` | `/root/.openclaw/workspace/SOUL.md` | Personnalite agent |
 | `./config/sandboxes/main/TOOLS.md` | `/root/.openclaw/workspace/TOOLS.md` | Notes outils |
+| `./config/devices/` | `/root/.openclaw/devices/` | Pairing gateway (paired/pending) |
+| `./config/identity/` | `/root/.openclaw/identity/` | Identite device + auth |
 | `./workspace/skills/` | `/app/skills/` | Skills ClawHub |
 | `./workspace/` | `/app/workspace/` | Fichiers de travail |
 | `C:/Users/timca/AppData/Local/Temp` | `/host/windows/temp` | Nettoyage temp Windows |
