@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastTouchedVersion": "2026.1.24-3",
-    "lastTouchedAt": "2026-02-09T00:00:00.000Z"
+    "lastTouchedVersion": "2026.2.15",
+    "lastTouchedAt": "2026-02-17T00:00:00.000Z"
   },
   "models": {
     "providers": {
@@ -63,8 +63,8 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "nvidia/moonshotai/kimi-k2.5",
-        "fallbacks": ["ollama/qwen2.5:0.5b", "google/gemini-2.5-flash"]
+        "primary": "google/gemini-2.5-flash",
+        "fallbacks": ["nvidia/moonshotai/kimi-k2.5", "ollama/qwen2.5:0.5b"]
       },
       "timeoutSeconds": 180,
       "maxConcurrent": 4,

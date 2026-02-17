@@ -11,6 +11,16 @@ __pycache__/
 *.pyc
 nul
 
+# Backup files (may contain old tokens/configs)
+*.bak
+*.bak.*
+
+# Runtime state (credentials, device pairing, identity)
+config/credentials/
+config/devices/
+config/identity/
+config/telegram/
+
 # OpenClaw runtime state (contains resolved API keys)
 config/sandboxes/main/agent/
 config/sandboxes/main/sessions/

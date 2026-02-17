@@ -1,7 +1,7 @@
 ﻿# MoltBot (OpenClaw) - Documentation Projet
 
-**Version**: OpenClaw v2026.2.9
-**Derniere mise a jour**: 16 fevrier 2026
+**Version**: OpenClaw v2026.2.15
+**Derniere mise a jour**: 17 fevrier 2026
 **Interface**: Telegram @TimoLeDozo_MoltBot
 
 ---
@@ -59,23 +59,25 @@ MoltBot est une interface IA multi-modale qui combine plusieurs modeles pour opt
 
 ## 2. Etat Actuel (16 Fevrier 2026)
 
-### Architecture Modeles (mise a jour 16/02)
+### Architecture Modeles (mise a jour 17/02)
 
 ```
-Priorite 1: google/gemini-2.5-flash     (API Google, gratuit/quota)
-Priorite 2: ollama/qwen2.5:0.5b         (local, CPU-only fallback)
-Priorite 3: nvidia/moonshotai/kimi-k2.5  (NVIDIA NIM, gratuit)
+Priorite 1: google/gemini-2.5-flash     (API Google, gratuit/quota)  [PRIMARY]
+Priorite 2: nvidia/moonshotai/kimi-k2.5  (NVIDIA NIM, gratuit)      [FALLBACK 1]
+Priorite 3: ollama/qwen2.5:0.5b         (local, CPU-only fallback)  [FALLBACK 2]
 ```
 
-**Changements depuis le 11/02:**
-- Modele Ollama downgrade: `qwen2.5:7b` -> `qwen2.5:0.5b` (7b inutilisable sur CPU)
-- Provider NVIDIA ajoute (Kimi K2.5 via `integrate.api.nvidia.com`)
-- Gemini 2.5 Flash est le modele principal effectif
+**Changements depuis le 16/02:**
+- Config `clawdbot.json` corrigee: primary = `google/gemini-2.5-flash` (etait NVIDIA par erreur)
+- Fallbacks reordonnees: NVIDIA avant Ollama (Ollama trop lent sur CPU)
+- Metadata version mise a jour: `2026.2.15`
+- NO_PROXY corrige (ajout `openclaw_proxy` manquant)
+- Fichiers `.bak`, credentials, devices, identity retires du tracking git
 
 ### Ce qui FONCTIONNE
 
 - [x] **Infrastructure Docker**
-  - Conteneur `moltbot_hub` UP (OpenClaw v2026.2.9)
+  - Conteneur `moltbot_hub` UP (OpenClaw v2026.2.15)
   - Conteneur `openclaw_proxy` (Squid) UP
   - Reseau bridge isole: 172.25.0.0/24
 
@@ -120,33 +122,40 @@ Priorite 3: nvidia/moonshotai/kimi-k2.5  (NVIDIA NIM, gratuit)
   - Built-in: `healthcheck`, `skill-creator`
   - Custom: `web-search` (Brave API via proxy undici)
 
-### Problemes ACTIFS (16 Fevrier 2026)
+### Problemes ACTIFS (17 Fevrier 2026)
 
-- **BLOQUANT: Gemini retourne "billing error / rate_limit"**
-  - Le bot ne peut plus repondre aux messages Telegram
-  - Cascade echoue: Gemini (rate_limit) -> Ollama (billing error) -> NVIDIA (timeout)
-  - Cause probable: quota Google AI Studio epuise ou cle invalide
+- **A VERIFIER: Gemini "billing error / rate_limit"**
+  - Quota Google AI Studio potentiellement epuise ou cle invalide
   - A verifier: dashboard Google AI Studio
+  - Config modele primaire corrigee (etait NVIDIA, maintenant Gemini)
 
-- **BLOQUANT: Cron "Morning Briefing" en erreur (3 echecs consecutifs)**
+- **BLOQUANT: Cron "Morning Briefing" en erreur**
   - Erreur: `FailoverError: No API key found for provider "anthropic"`
-  - Les sessions cron isolees ne trouvent pas les providers configures
-  - L'agent cron semble chercher "anthropic" comme provider par defaut
+  - Les sessions cron isolees ne resolvent pas les providers de la config principale
+  - Heartbeat-12h fonctionne (consecutiveErrors: 0)
+
+- **Ollama fallback KO** : qwen2.5:0.5b probablement pas installe sur l'hote
 
 - **Ollama discovery echoue** : "TypeError: fetch failed" au demarrage (cosmetique)
 
-- **Ollama fallback retourne "billing error"** au lieu de fonctionner
-  - Bizarre pour un modele local - le modele `qwen2.5:0.5b` est peut-etre absent de l'hote
+### Corrige le 17/02
+
+- [x] **Modele primaire** : corrige dans clawdbot.json (etait nvidia, maintenant google/gemini-2.5-flash)
+- [x] **Fallbacks reordonnees** : NVIDIA > Ollama (au lieu de Ollama > Gemini)
+- [x] **NO_PROXY duplique** : unifie avec `openclaw_proxy` inclus
+- [x] **Fichiers .bak** : retires du tracking git + ajoutes au .gitignore
+- [x] **Fichiers sensibles** : credentials/, devices/, identity/, telegram/ retires du git
+- [x] **Metadata version** : mise a jour a 2026.2.15
+- [x] **Cles API en clair** : deja corrige (env vars partout)
 
 ### Ce qui reste a faire
 
-- [ ] **URGENT: Resoudre l'erreur billing Gemini** (bot muet actuellement)
-- [ ] **Corriger le cron Morning Briefing** (erreur anthropic provider)
+- [ ] **URGENT: Verifier quota Google AI Studio** et regenerer la cle si necessaire
+- [ ] **Corriger le cron Morning Briefing** (erreur anthropic provider en session isolee)
 - [ ] **Verifier que qwen2.5:0.5b existe sur l'hote Ollama** (`ollama list`)
-- [ ] **Nettoyer les cles API en clair** dans `models.json` et `test_nvidia.sh`
 - [ ] **Web Scraping** : tester navigation Chromium via commande Telegram
 - [ ] **Enrichir la memoire** : alimenter le memory-core avec du contexte
-- [ ] **Mettre a jour OpenClaw** : v2026.2.9 -> v2026.2.15
+- [ ] **Nettoyer agent legacy** : supprimer `config/sandboxes/agent-main-0d71ad7a/`
 
 ---
 
@@ -294,7 +303,7 @@ MoltBot ne doit JAMAIS pouvoir:
 | 2. Isolation | Docker bridge reseau dedie | OK |
 | 3. Ressources | Limites CPU (2) et RAM (4GB) | OK |
 | 4. Privileges | no-new-privileges, capabilities dropped | OK |
-| 5. Fichiers | Volumes montes uniquement (pas d'acces hote) | **ATTENTION** (AppData/Local monte) |
+| 5. Fichiers | Volumes montes uniquement (pas d'acces hote) | OK (seulement AppData/Local/Temp) |
 | 6. Auth | Token Gateway 256-bit | OK |
 | 7. Sandbox | Desactive (Docker-in-Docker impossible) | N/A |
 
@@ -346,7 +355,7 @@ Moltbot-Hub/
 | `./config/sandboxes/main/TOOLS.md` | `/root/.openclaw/workspace/TOOLS.md` | Notes outils |
 | `./workspace/skills/` | `/app/skills/` | Skills ClawHub |
 | `./workspace/` | `/app/workspace/` | Fichiers de travail |
-| `C:/Users/timca/AppData/Local` | `/host/windows/local-appdata` | **Acces Windows** (cleanup disk) |
+| `C:/Users/timca/AppData/Local/Temp` | `/host/windows/temp` | Nettoyage temp Windows |
 
 ### Config OpenClaw (points cles)
 
@@ -430,6 +439,7 @@ docker logs openclaw_proxy | grep "DENIED"      # Domaines bloques
 | 12/02 | Ajout provider NVIDIA | Kimi K2.5 gratuit via NIM | 3eme fallback apres Gemini et Ollama |
 | 16/02 | Bot muet (billing error) | Quota Gemini epuise + Ollama fallback KO | Voir section 2c |
 | 16/02 | Audit code : 17 problemes | Cles en clair, volume AppData, cron casse, encodage | Voir section 2c |
+| 17/02 | Audit + corrections config | Primary=NVIDIA (erreur), .bak trackes, NO_PROXY duplique | Primary=Gemini, .bak gitignore, credentials retires du git |
 
 ---
 

@@ -32,7 +32,7 @@ services:
       - HTTPS_PROXY=http://openclaw_proxy:3128
       - GLOBAL_AGENT_HTTP_PROXY=http://openclaw_proxy:3128
       - GLOBAL_AGENT_NO_PROXY=localhost,127.0.0.1,host.docker.internal,ollama,openclaw_proxy
-      - NO_PROXY=localhost,127.0.0.1,host.docker.internal,ollama
+      - NO_PROXY=localhost,127.0.0.1,host.docker.internal,ollama,openclaw_proxy
       - NODE_TLS_REJECT_UNAUTHORIZED=1
       - HOST_WINDOWS_TEMP=/host/windows/temp
       # Configuration Chromium sans sandbox
