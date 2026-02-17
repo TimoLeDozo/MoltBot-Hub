@@ -94,7 +94,7 @@
     "defaultProfile": "openclaw",
     "headless": true,
     "noSandbox": true,
-    "executablePath": "/root/.cache/ms-playwright/chromium-1208/chrome-linux64/chrome"
+    "executablePath": "/usr/local/bin/openclaw-chromium-wrapper"
   },
   "commands": {
     "native": "auto",

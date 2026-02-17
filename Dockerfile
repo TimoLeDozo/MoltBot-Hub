@@ -34,6 +34,13 @@ RUN npm install -g openclaw@2026.2.15 clawhub
 # Désactiver le sandbox Playwright (utiliser le flag --no-sandbox via env var)
 ENV PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
 RUN npx playwright@1.58.0 install chromium --with-deps
+RUN cat <<'EOF' > /usr/local/bin/openclaw-chromium-wrapper \
+ && chmod +x /usr/local/bin/openclaw-chromium-wrapper
+#!/bin/sh
+set -eu
+CHROME_BIN="${OPENCLAW_CHROMIUM_BIN:-/root/.cache/ms-playwright/chromium-1208/chrome-linux64/chrome}"
+exec "$CHROME_BIN" --use-system-cert-verifier "$@"
+EOF
 
 WORKDIR /app
 
