@@ -49,13 +49,13 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771416000000,
-        "lastRunAtMs": 1771391315863,
+        "nextRunAtMs": 1771459200000,
+        "lastRunAtMs": 1771416000106,
         "lastStatus": "ok",
-        "lastDurationMs": 22312163,
+        "lastDurationMs": 4079,
         "consecutiveErrors": 0
       },
-      "updatedAtMs": 1771413628026
+      "updatedAtMs": 1771416004185
     }
   ]
 }
