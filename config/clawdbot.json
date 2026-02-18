@@ -11,6 +11,16 @@
         "apiKey": "ollama-local",
         "models": [
           {
+            "id": "qwen2.5:7b",
+            "name": "Qwen 2.5 7B",
+            "contextWindow": 32768,
+            "maxTokens": 8192,
+            "cost": {
+              "input": 0,
+              "output": 0
+            }
+          },
+          {
             "id": "qwen2.5:0.5b",
             "name": "Qwen 2.5 0.5B",
             "contextWindow": 32768,
@@ -31,7 +41,9 @@
             "id": "moonshotai/kimi-k2.5",
             "name": "Kimi K2.5",
             "reasoning": false,
-            "input": ["text"],
+            "input": [
+              "text"
+            ],
             "contextWindow": 131072,
             "maxTokens": 16384,
             "cost": {
@@ -64,12 +76,15 @@
     "defaults": {
       "model": {
         "primary": "google/gemini-2.5-flash",
-        "fallbacks": ["nvidia/moonshotai/kimi-k2.5", "ollama/qwen2.5:0.5b"]
+        "fallbacks": [
+          "nvidia/moonshotai/kimi-k2.5",
+          "ollama/qwen2.5:0.5b"
+        ]
       },
-      "timeoutSeconds": 180,
-      "maxConcurrent": 4,
+      "timeoutSeconds": 210,
+      "maxConcurrent": 2,
       "subagents": {
-        "maxConcurrent": 8
+        "maxConcurrent": 4
       }
     }
   },
@@ -104,7 +119,9 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "open",
-      "allowFrom": ["*"],
+      "allowFrom": [
+        "*"
+      ],
       "groupPolicy": "allowlist",
       "streamMode": "partial"
     }
@@ -115,7 +132,7 @@
     "bind": "lan",
     "auth": {
       "mode": "token",
-      "token": "5abf4030a02b435353181a2fa2f6de719a252643c004f07ca58b69cf79e0ab4d"
+      "token": "${GATEWAY_TOKEN}"
     }
   },
   "plugins": {

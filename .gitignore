@@ -42,6 +42,7 @@ config/**/sessions/*.jsonl
 config/**/runs/*.jsonl
 config/**/memory/*.sqlite*
 workspace/TRAVEL_LOG.md
+workspace/output/model-routing-report.json
 
 # Node modules (rebuild inside container)
 node_modules/

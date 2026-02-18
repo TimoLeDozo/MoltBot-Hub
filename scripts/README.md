@@ -1,8 +1,8 @@
-# Scripts de Monitoring OpenClaw
+# Scripts OpenClaw
 
 ## monitor-bot.sh
 
-Script de monitoring complet du bot OpenClaw.
+Script de monitoring du bot OpenClaw.
 
 ### Usage
 
@@ -10,31 +10,44 @@ Script de monitoring complet du bot OpenClaw.
 bash scripts/monitor-bot.sh
 ```
 
-### Ce qu'il vérifie
+### Verifications
 
-1. **État du conteneur** - Vérifie que le conteneur est actif
-2. **Ressources** - CPU et RAM (limites: 2 CPU / 4G RAM)
-3. **Services actifs** - Gateway, Browser, Telegram
-4. **Erreurs récentes** - Logs de la dernière heure
-5. **Sessions actives** - Nombre de sessions en cours
-6. **Sécurité** - Permissions, sandboxing
-7. **Recommandations** - Alertes si problème détecté
+1. Etat du conteneur
+2. Ressources CPU/RAM
+3. Services actifs (Gateway, Browser, Telegram)
+4. Erreurs recentes dans les logs
+5. Sessions actives
+6. Points de securite
 
-### Automatisation (Optionnel)
+## model-truth-router.ps1
 
-Pour exécuter le monitoring toutes les 5 minutes, utiliser le Task Scheduler Windows :
+Routeur "table de verite" pour switcher dynamiquement entre Gemini, NVIDIA et Qwen selon:
+- situation (`auto`, `chat`, `browser`, `analysis`, `research`, `emergency`)
+- erreurs recentes (quota/rate-limit)
+- budget tokens journalier
+- disponibilite locale Ollama (`qwen2.5:0.5b`, `qwen2.5:7b`)
 
-1. Ouvrir Task Scheduler
-2. Créer une tâche de base
-3. Déclencheur : Toutes les 5 minutes
-4. Action : Démarrer un programme
-5. Programme : `C:\Program Files\Git\bin\bash.exe`
-6. Arguments : `scripts/monitor-bot.sh`
-7. Répertoire : `c:\Users\timca\OneDrive\Documents\Moltbot-Hub`
+### Usage
 
-### Output
+Dry-run (aucune modification):
 
-Le script affiche un rapport complet avec des indicateurs visuels :
-- ✅ OK
-- ⚠️  Avertissement
-- ℹ️  Information
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/model-truth-router.ps1 -Situation auto
+```
+
+Appliquer la decision dans `config/clawdbot.json`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/model-truth-router.ps1 -Situation browser -Apply
+```
+
+Appliquer + redemarrer le conteneur:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/model-truth-router.ps1 -Situation auto -Apply -RestartContainer
+```
+
+### Sortie
+
+Rapport JSON ecrit dans:
+- `workspace/output/model-routing-report.json`

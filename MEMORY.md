@@ -14,3 +14,10 @@
 - Telegram reply "An unknown error occurred" is often a masked upstream model failure (quota/rate-limit/content filter), not a browser crash.
 - Current OpenClaw runtime behavior shows no robust retry/backoff path for 429 bursts across provider fallback chains.
 - `workspace/skills/web-search/skill.json` must point `command` to the wrapper `index.js` path, not `search.js`, to keep proxy/timeouts/error handling consistent.
+
+## 2026-02-18 Model Truth Table
+
+- Use `scripts/model-truth-router.ps1` to compute provider order from live signals (quota/rate-limit/tokens/local availability).
+- Supported routing situations: `auto`, `chat`, `browser`, `analysis`, `research`, `emergency`.
+- `-Apply` writes the selected primary/fallback chain into `config/clawdbot.json`; `-RestartContainer` applies immediately at runtime.
+- Last validated behavior with Gemini quota exhausted: browser mode routes `nvidia -> qwen7 -> qwen0.5 -> gemini`.
