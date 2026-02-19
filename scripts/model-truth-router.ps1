@@ -154,11 +154,11 @@ function Get-BaseOrder {
   $q7 = "ollama/qwen2.5:7b"
   switch ($Mode) {
     "chat"      { return @($q05, $q7, $gemini, $nvidia) }
-    "browser"   { return @($gemini, $nvidia, $q7, $q05) }
-    "analysis"  { return @($gemini, $nvidia, $q7, $q05) }
-    "research"  { return @($gemini, $nvidia, $q7, $q05) }
+    "browser"   { return @($gemini, $nvidia, $q05, $q7) }
+    "analysis"  { return @($gemini, $nvidia, $q05, $q7) }
+    "research"  { return @($gemini, $nvidia, $q05, $q7) }
     "emergency" { return @($q05, $q7, $gemini, $nvidia) }
-    default     { return @($gemini, $nvidia, $q7, $q05) }
+    default     { return @($gemini, $nvidia, $q05, $q7) }
   }
 }
 
@@ -214,7 +214,7 @@ if ($primary -like "ollama/*") {
 
 $config = Get-Content -Raw $ConfigPath | ConvertFrom-Json
 $config.agents.defaults.model.primary = $primary
-$config.agents.defaults.model.fallbacks = $fallbacks
+$config.agents.defaults.model.fallbacks = [object[]]$fallbacks
 $config.agents.defaults.timeoutSeconds = $timeoutSeconds
 $config.agents.defaults.maxConcurrent = $maxConcurrent
 $config.agents.defaults.subagents.maxConcurrent = $subagentsConcurrent

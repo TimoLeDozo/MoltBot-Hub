@@ -21,13 +21,13 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771488000000,
-        "lastRunAtMs": 1771327800735,
+        "nextRunAtMs": 1771574400000,
+        "lastRunAtMs": 1771489286923,
         "lastStatus": "ok",
-        "lastDurationMs": 7738,
+        "lastDurationMs": 195413,
         "consecutiveErrors": 0
       },
-      "updatedAtMs": 1771327808473
+      "updatedAtMs": 1771489482336
     },
     {
       "id": "heartbeat-12h",
@@ -49,13 +49,13 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771459200000,
-        "lastRunAtMs": 1771416000106,
+        "nextRunAtMs": 1771502400000,
+        "lastRunAtMs": 1771460281685,
         "lastStatus": "ok",
-        "lastDurationMs": 4079,
+        "lastDurationMs": 89261,
         "consecutiveErrors": 0
       },
-      "updatedAtMs": 1771416004185
+      "updatedAtMs": 1771460370946
     }
   ]
 }

@@ -21,11 +21,11 @@ Switch automatically between `gemini`, `nvidia`, and `qwen` based on:
 | Situation | Base order (primary -> fallbacks) |
 |---|---|
 | `chat` | `qwen2.5:0.5b`, `qwen2.5:7b`, `gemini`, `nvidia` |
-| `browser` | `gemini`, `nvidia`, `qwen2.5:7b`, `qwen2.5:0.5b` |
-| `analysis` | `gemini`, `nvidia`, `qwen2.5:7b`, `qwen2.5:0.5b` |
-| `research` | `gemini`, `nvidia`, `qwen2.5:7b`, `qwen2.5:0.5b` |
+| `browser` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
+| `analysis` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
+| `research` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
 | `emergency` | `qwen2.5:0.5b`, `qwen2.5:7b`, `gemini`, `nvidia` |
-| `auto` | `gemini`, `nvidia`, `qwen2.5:7b`, `qwen2.5:0.5b` |
+| `auto` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
 
 ## Override Rules (Applied in order)
 | Rule | Condition | Action |
