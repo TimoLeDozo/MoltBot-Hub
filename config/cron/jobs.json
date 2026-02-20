@@ -21,14 +21,13 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771574400000,
-        "lastRunAtMs": 1771489286923,
+        "nextRunAtMs": 1771660800000,
+        "lastRunAtMs": 1771590217359,
         "lastStatus": "ok",
-        "lastDurationMs": 195413,
-        "consecutiveErrors": 0,
-        "runningAtMs": 1771590217167
+        "lastDurationMs": 21247630,
+        "consecutiveErrors": 0
       },
-      "updatedAtMs": 1771489482336
+      "updatedAtMs": 1771611464989
     },
     {
       "id": "heartbeat-12h",
@@ -50,14 +49,13 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771545600000,
-        "lastRunAtMs": 1771502400233,
+        "nextRunAtMs": 1771632000000,
+        "lastRunAtMs": 1771611464989,
         "lastStatus": "ok",
-        "lastDurationMs": 396951,
-        "consecutiveErrors": 0,
-        "runningAtMs": 1771590217167
+        "lastDurationMs": 4255,
+        "consecutiveErrors": 0
       },
-      "updatedAtMs": 1771502797184
+      "updatedAtMs": 1771611469244
     },
     {
       "id": "night-shift",
@@ -80,10 +78,12 @@
       },
       "state": {
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1771552800000,
-        "runningAtMs": 1771590217167
+        "nextRunAtMs": 1771639200000,
+        "lastRunAtMs": 1771611469244,
+        "lastStatus": "ok",
+        "lastDurationMs": 290507
       },
-      "updatedAtMs": 0
+      "updatedAtMs": 1771611759751
     }
   ]
 }

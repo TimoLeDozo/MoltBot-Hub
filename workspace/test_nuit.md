@@ -1,0 +1,1 @@
+Ceci est un test réussi de l'équipe de nuit. Le Service Account fonctionne parfaitement.

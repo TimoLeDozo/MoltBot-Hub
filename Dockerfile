@@ -1,11 +1,13 @@
 FROM node:24-slim
 
-# Installation des dépendances système pour Playwright Chromium
+# Install system dependencies for Playwright Chromium
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     git \
     procps \
-    # Dépendances Chromium essentielles
+    python3 \
+    python3-pip \
+    # Essential Chromium dependencies
     libnss3 \
     libnspr4 \
     libatk1.0-0 \
@@ -22,16 +24,19 @@ RUN apt-get update && apt-get install -y \
     libcairo2 \
     libasound2 \
     libatspi2.0-0 \
-    # Fonts pour rendu correct
+    # Fonts for rendering
     fonts-liberation \
     fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/*
 
-# Installation d'OpenClaw (dernière version - anciennement Clawdbot/Moltbot)
+COPY workspace/skills/google-doc-sync/requirements.txt /tmp/google-doc-sync-requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r /tmp/google-doc-sync-requirements.txt
+
+# Install OpenClaw (latest version)
 RUN npm install -g openclaw@2026.2.15 clawhub
 
-# Installation de Playwright Chromium
-# Désactiver le sandbox Playwright (utiliser le flag --no-sandbox via env var)
+# Install Playwright Chromium
+# Disable Playwright sandbox (use --no-sandbox via env var)
 ENV PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
 RUN npx playwright@1.58.0 install chromium --with-deps
 RUN cat <<'EOF' > /usr/local/bin/openclaw-chromium-wrapper \
@@ -44,5 +49,5 @@ EOF
 
 WORKDIR /app
 
-# Lancement du bot (openclaw est compatible avec la commande clawdbot)
+# Start the bot (openclaw is compatible with clawdbot command)
 CMD ["openclaw", "gateway", "--port", "18789", "--bind", "lan"]
