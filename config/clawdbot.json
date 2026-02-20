@@ -75,17 +75,16 @@
     "agents":  {
                    "defaults":  {
                                     "model":  {
-                                                  "primary":  "nvidia/moonshotai/kimi-k2.5",
+                                                  "primary":  "google/gemini-2.5-flash",
                                                   "fallbacks":  [
-                                                                    "ollama/qwen2.5:0.5b",
-                                                                    "ollama/qwen2.5:7b",
-                                                                    "google/gemini-2.5-flash"
+                                                                    "nvidia/moonshotai/kimi-k2.5",
+                                                                    "ollama/qwen2.5:0.5b"
                                                                 ]
                                               },
-                                    "timeoutSeconds":  210,
-                                    "maxConcurrent":  2,
+                                    "timeoutSeconds":  180,
+                                    "maxConcurrent":  1,
                                     "subagents":  {
-                                                      "maxConcurrent":  4
+                                                      "maxConcurrent":  2
                                                   }
                                 }
                },

@@ -151,14 +151,14 @@ function Get-BaseOrder {
   $gemini = "google/gemini-2.5-flash"
   $nvidia = "nvidia/moonshotai/kimi-k2.5"
   $q05 = "ollama/qwen2.5:0.5b"
-  $q7 = "ollama/qwen2.5:7b"
   switch ($Mode) {
-    "chat"      { return @($q05, $q7, $gemini, $nvidia) }
-    "browser"   { return @($gemini, $nvidia, $q05, $q7) }
-    "analysis"  { return @($gemini, $nvidia, $q05, $q7) }
-    "research"  { return @($gemini, $nvidia, $q05, $q7) }
-    "emergency" { return @($q05, $q7, $gemini, $nvidia) }
-    default     { return @($gemini, $nvidia, $q05, $q7) }
+    # Keep qwen2.5:7b out of automatic routing to avoid host memory pressure.
+    "chat"      { return @($q05, $gemini, $nvidia) }
+    "browser"   { return @($gemini, $nvidia, $q05) }
+    "analysis"  { return @($gemini, $nvidia, $q05) }
+    "research"  { return @($gemini, $nvidia, $q05) }
+    "emergency" { return @($q05, $gemini, $nvidia) }
+    default     { return @($gemini, $nvidia, $q05) }
   }
 }
 
@@ -189,7 +189,6 @@ if ($nvidiaUnhealthy) { Move-ToEnd -List $ordered -Item "nvidia/moonshotai/kimi-
 if ($geminiUnhealthy -and $nvidiaUnhealthy -and $ollamaAvailable) {
   $forced = [System.Collections.Generic.List[string]]::new()
   if ($hasQ05) { [void]$forced.Add("ollama/qwen2.5:0.5b") }
-  if ($hasQ7) { [void]$forced.Add("ollama/qwen2.5:7b") }
   [void]$forced.Add("google/gemini-2.5-flash")
   [void]$forced.Add("nvidia/moonshotai/kimi-k2.5")
   $ordered = $forced
@@ -203,11 +202,11 @@ $primary = $ordered[0]
 $fallbacks = @()
 if ($ordered.Count -gt 1) { $fallbacks = @($ordered[1..($ordered.Count - 1)]) }
 
-$timeoutSeconds = 210
-$maxConcurrent = 2
-$subagentsConcurrent = 4
+$timeoutSeconds = 180
+$maxConcurrent = 1
+$subagentsConcurrent = 2
 if ($primary -like "ollama/*") {
-  $timeoutSeconds = 300
+  $timeoutSeconds = 180
   $maxConcurrent = 1
   $subagentsConcurrent = 2
 }

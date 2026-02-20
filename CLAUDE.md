@@ -114,13 +114,23 @@ Priorite 3: ollama/qwen2.5:0.5b         (local, CPU-only fallback)  [FALLBACK 2]
 - [x] **Hooks internes**
   - `session-memory`, `boot-md`, `command-logger`
 
-- [x] **Cron jobs (2 jobs)**
+- [x] **Cron jobs (3 jobs)**
   - `morning-briefing` : 8h quotidien, actualites tech IA
   - `heartbeat-12h` : toutes les 12h, status system
+  - `night-shift` : 2h quotidien, cycle de travail profond + maj Google Doc
 
 - [x] **Skills**
   - Built-in: `healthcheck`, `skill-creator`
   - Custom: `web-search` (Brave API via proxy undici)
+  - Placeholder: `google-doc-sync` (Python skill futur via Service Account)
+
+### Night Shift Automation (nouveau)
+
+- Job cron `night-shift` planifie a `02:00` (UTC local conteneur) dans `config/cron/jobs.json`.
+- Mission: lire `RELAIS_SOIR.md`, avancer les taches n8n/Excel, puis synchroniser un Google Doc via Service Account.
+- Quota operationnel:
+  - Day Shift (08:00-20:00): max 10 requetes
+  - Night Shift (02:00-06:00): 10 requetes restantes pour travail profond
 
 ### Problemes ACTIFS (17 Fevrier 2026)
 
@@ -318,7 +328,7 @@ Moltbot-Hub/
 â”œâ”€â”€ config/
 â”‚   â”œâ”€â”€ clawdbot.json          # Config principale OpenClaw (3 providers)
 â”‚   â”œâ”€â”€ cron/
-â”‚   â”‚   â”œâ”€â”€ jobs.json          # 2 cron jobs (morning-briefing, heartbeat-12h)
+â”‚   â”‚   â”œâ”€â”€ jobs.json          # 3 cron jobs (+ night-shift 02:00)
 â”‚   â”‚   â””â”€â”€ runs/              # Logs d'execution des cron jobs
 â”‚   â””â”€â”€ sandboxes/
 â”‚       â”œâ”€â”€ agent-main-0d71ad7a/  # Agent legacy (SOUL.md, IDENTITY.md, USER.md)
@@ -336,6 +346,7 @@ Moltbot-Hub/
 â”‚           â”œâ”€â”€ search.js      # Brave API fetch via undici proxy
 â”‚           â”œâ”€â”€ search.sh      # Version bash (curl)
 â”‚           â””â”€â”€ skill.json     # Metadata skill
+â”‚       â””â”€â”€ google-doc-sync/   # Placeholder skill Python (Service Account)
 â”œâ”€â”€ squid.conf                 # Whitelist proxy Squid
 â”œâ”€â”€ docker-compose.yml         # Config Docker principale
 â”œâ”€â”€ docker-compose.override.yml # Config Squid + reseau bridge
@@ -355,9 +366,9 @@ Moltbot-Hub/
 | `./config/sandboxes/main/TOOLS.md` | `/root/.openclaw/workspace/TOOLS.md` | Notes outils |
 | `./config/devices/` | `/root/.openclaw/devices/` | Pairing gateway (paired/pending) |
 | `./config/identity/` | `/root/.openclaw/identity/` | Identite device + auth |
+| `./config/google_service_account.json` | `/app/config/google_service_account.json` | Service Account Google (night-shift/doc sync) |
 | `./workspace/skills/` | `/app/skills/` | Skills ClawHub |
 | `./workspace/` | `/app/workspace/` | Fichiers de travail |
-| `C:/Users/timca/AppData/Local/Temp` | `/host/windows/temp` | Nettoyage temp Windows |
 
 ### Config OpenClaw (points cles)
 

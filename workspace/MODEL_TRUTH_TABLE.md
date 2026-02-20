@@ -20,18 +20,19 @@ Switch automatically between `gemini`, `nvidia`, and `qwen` based on:
 ## Base Order By Situation
 | Situation | Base order (primary -> fallbacks) |
 |---|---|
-| `chat` | `qwen2.5:0.5b`, `qwen2.5:7b`, `gemini`, `nvidia` |
-| `browser` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
-| `analysis` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
-| `research` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
-| `emergency` | `qwen2.5:0.5b`, `qwen2.5:7b`, `gemini`, `nvidia` |
-| `auto` | `gemini`, `nvidia`, `qwen2.5:0.5b`, `qwen2.5:7b` |
+| `chat` | `qwen2.5:0.5b`, `gemini`, `nvidia` |
+| `browser` | `gemini`, `nvidia`, `qwen2.5:0.5b` |
+| `analysis` | `gemini`, `nvidia`, `qwen2.5:0.5b` |
+| `research` | `gemini`, `nvidia`, `qwen2.5:0.5b` |
+| `emergency` | `qwen2.5:0.5b`, `gemini`, `nvidia` |
+| `auto` | `gemini`, `nvidia`, `qwen2.5:0.5b` |
+
+`qwen2.5:7b` is excluded from automatic routing to avoid host memory pressure.
 
 ## Override Rules (Applied in order)
 | Rule | Condition | Action |
 |---|---|---|
 | R1 | `ollama_qwen_0_5b_available = false` | remove `qwen2.5:0.5b` from candidates |
-| R1b | `ollama_qwen_7b_available = false` | remove `qwen2.5:7b` from candidates |
 | R2 | `gemini_quota_exceeded_today = true` | push `gemini` to end |
 | R3 | `gemini_recent_rate_limit = true` | push `gemini` to end |
 | R4 | `nvidia_recent_rate_limit = true` | push `nvidia` to end |
@@ -41,13 +42,13 @@ Switch automatically between `gemini`, `nvidia`, and `qwen` based on:
 
 ## Runtime Tuning
 - if primary is local qwen:
-  - `timeoutSeconds = 300`
+  - `timeoutSeconds = 180`
   - `maxConcurrent = 1`
   - `subagents.maxConcurrent = 2`
 - if primary is cloud:
-  - `timeoutSeconds = 210`
-  - `maxConcurrent = 2`
-  - `subagents.maxConcurrent = 4`
+  - `timeoutSeconds = 180`
+  - `maxConcurrent = 1`
+  - `subagents.maxConcurrent = 2`
 
 ## Command
 Use `scripts/model-truth-router.ps1` to compute and apply these rules.

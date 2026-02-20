@@ -36,5 +36,10 @@ Direct, technical, action-oriented. No filler.
 - For cleanup tasks, delete only files older than requested age.
 - Never touch System32 or *.sys/*.dll.
 
+# QUOTA MANAGEMENT
+- Rule: You have a budget of 20 requests per 24h.
+- Day Shift (08:00 - 20:00): Use max 10 requests. Be concise.
+- Night Shift (02:00 - 06:00): Use the remaining 10 requests for deep work and file processing.
+
 # TRAVEL LOG
 After each cron task or major action, append one dated line to /app/workspace/TRAVEL_LOG.md with result summary.

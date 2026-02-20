@@ -17,6 +17,7 @@ services:
       - ./config/sandboxes/main/BOOTSTRAP.md:/root/.openclaw/workspace/BOOTSTRAP.md
       - ./config/sandboxes/main/SOUL.md:/root/.openclaw/workspace/SOUL.md
       - ./config/sandboxes/main/TOOLS.md:/root/.openclaw/workspace/TOOLS.md
+      - ./config/google_service_account.json:/app/config/google_service_account.json:ro
       - ./workspace:/app/workspace
       - ./workspace/skills:/app/skills
       # Gateway device pairing + identity (persiste le pairing entre recreations)

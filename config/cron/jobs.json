@@ -25,7 +25,8 @@
         "lastRunAtMs": 1771489286923,
         "lastStatus": "ok",
         "lastDurationMs": 195413,
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1771590217167
       },
       "updatedAtMs": 1771489482336
     },
@@ -49,13 +50,40 @@
         "to": "telegram:6348483424"
       },
       "state": {
-        "nextRunAtMs": 1771502400000,
-        "lastRunAtMs": 1771460281685,
+        "nextRunAtMs": 1771545600000,
+        "lastRunAtMs": 1771502400233,
         "lastStatus": "ok",
-        "lastDurationMs": 89261,
-        "consecutiveErrors": 0
+        "lastDurationMs": 396951,
+        "consecutiveErrors": 0,
+        "runningAtMs": 1771590217167
       },
-      "updatedAtMs": 1771460370946
+      "updatedAtMs": 1771502797184
+    },
+    {
+      "id": "night-shift",
+      "name": "Night Shift",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 2 * * *"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Mission Nuit : Analyse le fichier RELAIS_SOIR.md dans le workspace. Avance sur les taches n8n/Excel designees. Travaille en boucle (loop) jusqu'a ce que tu aies consomme ton quota de nuit (environ 10 requetes) ou que la tache soit finie. En fin de session, mets a jour le Google Doc via le Service Account."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "target": "6348483424",
+        "to": "telegram:6348483424"
+      },
+      "state": {
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1771552800000,
+        "runningAtMs": 1771590217167
+      },
+      "updatedAtMs": 0
     }
   ]
 }
