@@ -44,6 +44,7 @@ services:
       - OPENCLAW_GATEWAY_TOKEN=${GATEWAY_TOKEN}
     ports:
       - "18789:18789"
+      - "8080:8080"
     # C'est ICI que la magie opère (ne supprime pas ça !)
     extra_hosts:
       - "host.docker.internal:host-gateway"

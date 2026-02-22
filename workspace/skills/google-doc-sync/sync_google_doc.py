@@ -12,6 +12,7 @@ import json
 import os
 import pathlib
 import sys
+from urllib.parse import parse_qs, urlparse
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -64,23 +65,36 @@ def build_clients():
             flow = InstalledAppFlow.from_client_secrets_file(
                 CLIENT_SECRETS_FILE, SCOPES
             )
-            # IMPORTANT: Use run_console() for headless Docker.
-            if hasattr(flow, "run_console"):
-                creds = flow.run_console()
-            else:
-                auth_url, _ = flow.authorization_url(
-                    access_type="offline", prompt="consent"
-                )
-                print(
-                    "Open this URL to authorize access, then paste the code:",
-                    file=sys.stderr,
-                )
-                print(auth_url, file=sys.stderr)
-                code = os.environ.get("GOOGLE_OAUTH_CODE")
-                if not code:
-                    code = input("Enter verification code: ").strip()
-                flow.fetch_token(code=code)
-                creds = flow.credentials
+            # 1. Force redirect_uri to localhost (Authorized by Google Desktop clients)
+            flow.redirect_uri = 'http://localhost:8080/'
+
+            auth_response = os.environ.get("GOOGLE_OAUTH_RESPONSE")
+            forced_state = None
+            if auth_response:
+                parsed = parse_qs(urlparse(auth_response).query)
+                forced_state = (parsed.get("state") or [None])[0]
+            
+            # 2. Generate auth URL
+            auth_kwargs = {"access_type": "offline", "prompt": "consent"}
+            if forced_state:
+                auth_kwargs["state"] = forced_state
+            auth_url, _ = flow.authorization_url(**auth_kwargs)
+
+            print("\n" + "="*60, file=sys.stderr)
+            print("🔗 1. OPEN THIS LINK TO AUTHORIZE:", file=sys.stderr)
+            print(auth_url, file=sys.stderr)
+            print("⚠️ 2. After authorization, Google will redirect you to a 'localhost' page that will probably fail to load (Site cannot be reached). THIS IS PERFECTLY NORMAL.", file=sys.stderr)
+            print("📋 3. COPY THE ENTIRE URL from your browser's address bar (it starts with http://localhost:8080/?state=...)", file=sys.stderr)
+            print("="*60 + "\n", file=sys.stderr)
+
+            # 3. Get the redirected URL from environment
+            if not auth_response:
+                auth_response = input("Paste the FULL redirected localhost URL here: ").strip()
+                
+            # 4. Fetch token
+            os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
+            flow.fetch_token(authorization_response=auth_response)
+            creds = flow.credentials
         with open(TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
 
