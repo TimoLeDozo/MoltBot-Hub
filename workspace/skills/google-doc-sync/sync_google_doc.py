@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Create a Google Doc from a local Markdown file using a Service Account.
+Create a Google Doc from a local Markdown file using User OAuth 2.0.
 
 This script is native and standalone:
 - no third-party SaaS wrappers
@@ -8,15 +8,21 @@ This script is native and standalone:
 """
 
 import argparse
+import json
+import os
 import pathlib
 import sys
 
-from google.oauth2.service_account import Credentials
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
-DEFAULT_SERVICE_ACCOUNT = "/app/config/google_service_account.json"
+CLIENT_SECRETS_FILE = "/app/config/client_secret.json"
+TOKEN_FILE = "/app/config/token.json"
+PARENT_FOLDER_ID = "1Phx9MyQNae77TlxMkjSv0YmhMCNOuCgD"
 SCOPES = [
     "https://www.googleapis.com/auth/documents",
     "https://www.googleapis.com/auth/drive.file",
@@ -30,11 +36,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "markdown_path",
         help="Local path to a Markdown file to upload into a new Google Doc.",
-    )
-    parser.add_argument(
-        "--service-account",
-        default=DEFAULT_SERVICE_ACCOUNT,
-        help="Path to Service Account JSON key.",
     )
     parser.add_argument(
         "--title",
@@ -52,20 +53,54 @@ def load_markdown(path: pathlib.Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def build_clients(service_account_path: str):
-    credentials = Credentials.from_service_account_file(
-        service_account_path, scopes=SCOPES
-    )
-    docs_service = build("docs", "v1", credentials=credentials, cache_discovery=False)
-    drive_service = build(
-        "drive", "v3", credentials=credentials, cache_discovery=False
-    )
+def build_clients():
+    creds = None
+    if os.path.exists(TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                CLIENT_SECRETS_FILE, SCOPES
+            )
+            # IMPORTANT: Use run_console() for headless Docker.
+            if hasattr(flow, "run_console"):
+                creds = flow.run_console()
+            else:
+                auth_url, _ = flow.authorization_url(
+                    access_type="offline", prompt="consent"
+                )
+                print(
+                    "Open this URL to authorize access, then paste the code:",
+                    file=sys.stderr,
+                )
+                print(auth_url, file=sys.stderr)
+                code = os.environ.get("GOOGLE_OAUTH_CODE")
+                if not code:
+                    code = input("Enter verification code: ").strip()
+                flow.fetch_token(code=code)
+                creds = flow.credentials
+        with open(TOKEN_FILE, "w") as token:
+            token.write(creds.to_json())
+
+    docs_service = build("docs", "v1", credentials=creds)
+    drive_service = build("drive", "v3", credentials=creds)
     return docs_service, drive_service
 
 
-def create_doc_with_content(docs_service, title: str, content: str) -> str:
-    doc = docs_service.documents().create(body={"title": title}).execute()
-    doc_id = doc["documentId"]
+def create_doc_with_content(docs_service, drive_service, title: str, content: str) -> str:
+    file_metadata = {
+        "name": title,
+        "mimeType": "application/vnd.google-apps.document",
+        "parents": [PARENT_FOLDER_ID],
+    }
+    doc = (
+        drive_service.files()
+        .create(body=file_metadata, fields="id", supportsAllDrives=True)
+        .execute()
+    )
+    doc_id = doc.get("id")
 
     if content:
         docs_service.documents().batchUpdate(
@@ -87,7 +122,7 @@ def create_doc_with_content(docs_service, title: str, content: str) -> str:
 def get_doc_url(drive_service, doc_id: str) -> str:
     file_meta = (
         drive_service.files()
-        .get(fileId=doc_id, fields="webViewLink")
+        .get(fileId=doc_id, fields="webViewLink", supportsAllDrives=True)
         .execute()
     )
     return file_meta.get("webViewLink") or f"https://docs.google.com/document/d/{doc_id}/edit"
@@ -100,20 +135,58 @@ def main() -> int:
 
     try:
         markdown_content = load_markdown(md_path)
-        docs_service, drive_service = build_clients(args.service_account)
-        doc_id = create_doc_with_content(docs_service, doc_title, markdown_content)
+        docs_service, drive_service = build_clients()
+        doc_id = create_doc_with_content(
+            docs_service, drive_service, doc_title, markdown_content
+        )
         doc_url = get_doc_url(drive_service, doc_id)
-        # Print URL only so OpenClaw can consume directly.
-        print(doc_url)
+        print(
+            json.dumps(
+                {
+                    "status": "success",
+                    "url": doc_url,
+                    "documentId": doc_id,
+                }
+            )
+        )
         return 0
     except (FileNotFoundError, ValueError) as exc:
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "message": str(exc),
+                    "code": "INVALID_INPUT",
+                }
+            )
+        )
         print(str(exc), file=sys.stderr)
         return 2
     except HttpError as exc:
-        print(f"Google API error: {exc}", file=sys.stderr)
+        message = f"Google API error: {exc}"
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "message": message,
+                    "code": "GOOGLE_API_ERROR",
+                }
+            )
+        )
+        print(message, file=sys.stderr)
         return 3
     except Exception as exc:
-        print(f"Unexpected error: {exc}", file=sys.stderr)
+        message = f"Unexpected error: {exc}"
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "message": message,
+                    "code": "UNEXPECTED_ERROR",
+                }
+            )
+        )
+        print(message, file=sys.stderr)
         return 1
 
 

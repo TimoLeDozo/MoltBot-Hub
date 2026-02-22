@@ -21,6 +21,8 @@ config/devices/
 config/identity/
 config/telegram/
 config/google_service_account.json
+config/client_secret.json
+config/token.json
 
 # OpenClaw runtime state (contains resolved API keys)
 config/sandboxes/main/agent/
