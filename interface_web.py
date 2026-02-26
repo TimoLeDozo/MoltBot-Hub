@@ -62,13 +62,16 @@ st.divider()
 
 # --- ÉTAPE 2 : LE QUESTIONNAIRE COMPLÉMENTAIRE ---
 st.header("2. Informations complémentaires")
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
-    num_secu = st.text_input("N° de Sécurité Sociale (si absent du scan)")
+    num_secu = st.text_input("N° de Sécurité Sociale (si absent)")
     
 with col2:
-    trimestre = st.selectbox("Période de la classe", ["Non précisé", "1er trimestre", "2ème trimestre", "3ème trimestre"])
+    trimestre = st.selectbox("Période", ["Non précisé", "1er trimestre", "2ème trimestre", "3ème trimestre"])
+
+with col3:
+    genre = st.radio("Sexe de l'enfant", ["Garçon", "Fille"])
 
 type_bilan = st.selectbox("Quel type d'examens a été passé ?", [
     "Langage oral", 
@@ -95,12 +98,22 @@ if fichier_renseignement and grille_oral:
     if st.button("✨ Générer le compte-rendu Word", type="primary", use_container_width=True):
         with st.spinner('Lecture des documents et analyse par l\'IA en cours... Veuillez patienter ⏳'):
             
-            # 1. Préparation du grand dictionnaire de données
+           # 1. Préparation du grand dictionnaire de données
             donnees_finales = {
                 "NUM_SECU": num_secu if num_secu else "[À COMPLÉTER]",
                 "TRIMESTRE": trimestre
             }
             
+            # --- NOUVEAU : GESTION DES PRONOMS ---
+            if genre == "Garçon":
+                donnees_finales["PRONOM_SUJET"] = "il"
+                donnees_finales["PRONOM_SUJET_MAJ"] = "Il"
+                donnees_finales["ACCORD_E"] = ""
+            else:
+                donnees_finales["PRONOM_SUJET"] = "elle"
+                donnees_finales["PRONOM_SUJET_MAJ"] = "Elle"
+                donnees_finales["ACCORD_E"] = "e"
+                
             # 2. Lecture de la fiche de renseignement (Tesseract)
             chemin_rens = sauvegarder_fichier_upload(fichier_renseignement, "fiche_patient.pdf")
             donnees_patient = extraire_fiche_renseignement(chemin_rens)

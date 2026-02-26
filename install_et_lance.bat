@@ -22,49 +22,46 @@ if not exist "%APP_FILE%" (
     goto :error
 )
 
-if not exist "%VENV_PY%" (
-    echo [INFO] Environnement virtuel non trouve. Creation en cours...
-    call :find_python
-    if errorlevel 1 goto :error
+REM --- VERIFICATION DE L'ENVIRONNEMENT VIRTUEL ---
+if exist "%VENV_PY%" goto :venv_exists
 
-    %PYTHON_BOOTSTRAP% -m venv "%VENV_DIR%"
-    if errorlevel 1 (
-        echo [ERREUR] Impossible de creer l'environnement virtuel.
-        goto :error
-    )
+echo [INFO] Environnement virtuel non trouve. Creation en cours...
+call :find_python
+if errorlevel 1 goto :error
 
-    call "%VENV_ACTIVATE%"
-    if errorlevel 1 (
-        echo [ERREUR] Impossible d'activer l'environnement virtuel.
-        goto :error
-    )
-
-    if not exist "%REQUIREMENTS%" (
-        echo [ERREUR] Fichier introuvable : %REQUIREMENTS%
-        goto :error
-    )
-
-    echo [INFO] Installation des dependances...
-    python -m pip install --upgrade pip
-    if errorlevel 1 (
-        echo [ERREUR] Echec de mise a jour de pip.
-        goto :error
-    )
-
-    python -m pip install -r "%REQUIREMENTS%"
-    if errorlevel 1 (
-        echo [ERREUR] Echec d'installation des dependances.
-        goto :error
-    )
-) else (
-    echo [INFO] Environnement virtuel detecte. Installation ignoree.
-    call "%VENV_ACTIVATE%"
-    if errorlevel 1 (
-        echo [ERREUR] Impossible d'activer l'environnement virtuel.
-        goto :error
-    )
+REM Sans les parentheses, Windows comprend enfin la variable !
+%PYTHON_BOOTSTRAP% -m venv "%VENV_DIR%"
+if errorlevel 1 (
+    echo [ERREUR] Impossible de creer l'environnement virtuel.
+    goto :error
 )
 
+call "%VENV_ACTIVATE%"
+if errorlevel 1 (
+    echo [ERREUR] Impossible d'activer l'environnement virtuel.
+    goto :error
+)
+
+echo [INFO] Installation des dependances (Patientez quelques minutes)...
+python -m pip install --upgrade pip
+python -m pip install -r "%REQUIREMENTS%"
+if errorlevel 1 (
+    echo [ERREUR] Echec d'installation des dependances.
+    goto :error
+)
+
+goto :launch
+
+:venv_exists
+echo [INFO] Environnement virtuel detecte. Installation ignoree.
+call "%VENV_ACTIVATE%"
+if errorlevel 1 (
+    echo [ERREUR] Impossible d'activer l'environnement virtuel.
+    goto :error
+)
+
+:launch
+echo.
 echo [INFO] Lancement de l'interface Streamlit...
 python -m streamlit run "%APP_FILE%"
 if errorlevel 1 (
