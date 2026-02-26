@@ -1,0 +1,34 @@
+# ==========================================
+# 🛑 DONNEES SENSIBLES / SECRET MEDICAL 🛑
+# ==========================================
+# On ignore les dossiers contenant les fiches patients et les bilans générés
+data_entree/
+data_sortie/
+
+# On ignore tous les formats de documents (au cas où ils traînent à la racine)
+*.pdf
+*.docx
+*.doc
+*.odt
+*.jpg
+*.jpeg
+*.png
+
+# ==========================================
+# ⚙️ FICHIERS PYTHON ET SYSTEME ⚙️
+# ==========================================
+# Environnements virtuels
+venv/
+.venv/
+env/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variables d'environnement (si on utilise une clé API plus tard)
+.env
+
+# On autorise exceptionnellement le modèle Word avec les placeholders
+!Test_PlaceHolder.docx

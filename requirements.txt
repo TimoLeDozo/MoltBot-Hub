@@ -1,0 +1,12 @@
+# Moteur OCR (Reconnaissance de texte)
+pytesseract
+
+# Outil pour transformer les PDF de la clinique en images lisibles par l'OCR
+pdf2image
+
+# Outil pour lire, modifier et sauvegarder le fichier Word (.docx) avec les Placeholders
+python-docx
+
+google-generativeai
+python-dotenv
+streamlit
