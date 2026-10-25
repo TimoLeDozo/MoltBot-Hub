@@ -45,6 +45,19 @@ flowchart TB
     style J fill:#2d2416,stroke:#b7986a
 ```
 
+Les IA derrière ces rôles :
+
+| IA | Rôle | Ce qu'elle ne fait pas |
+|---|---|---|
+| Claude Opus 5.5 | Pilote : cadrage, découpage, relecture, livrables clients | Le code mécanique qu'un exécutant peut faire |
+| Claude Fable 5.1 | Juge : enquête, contre-expertise, relecture critique des sessions | Le code de production |
+| Codex | Exécutant : missions bornées en atelier jetable, correctifs, tests, travail de nuit | Décider, publier, toucher un service en production |
+| Gemini, via Antigravity | Second avis : multimodal, recherche longue, relecture lourde | Modifier sans brief écrit |
+| Qwen et Gemma, en local | Tri, classement, extraction, embeddings, données privées | Rendre seuls un verdict final |
+| Hermes | Agent de messagerie : résumé du jour, état, décisions, alertes | Traiter de gros volumes |
+
+Chaque IA lit ses consignes dans son propre fichier ([CLAUDE.md](CLAUDE.md), [AGENTS.md](AGENTS.md), [GEMINI.md](GEMINI.md)), avec les mêmes règles. Le [journal](JOURNAL.md) date chaque étape.
+
 Deux règles tiennent l'ensemble :
 
 1. **Celui qui écrit n'est pas celui qui juge.** Un modèle relit mal son propre travail.
