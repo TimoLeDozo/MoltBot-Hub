@@ -4,6 +4,8 @@
 
 Ce dépôt est une **vitrine**. Il expose l'architecture de décision et les garde-fous, pas l'installation. Aucune clé, aucun point d'accès, aucune adresse, aucune configuration exécutable. Le dépôt exploité reste privé.
 
+Dernière mise à jour : <!-- mesure:maj -->09/11/2026<!-- /mesure -->. Avancement daté : [journal](JOURNAL.md).
+
 ---
 
 ## Le problème que je traite
