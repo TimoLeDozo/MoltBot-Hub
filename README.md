@@ -1,10 +1,12 @@
 # MoltBot Hub
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/banniere-sombre.svg"><img src="assets/banniere-clair.svg" alt="MoltBot Hub. Un rôle par moteur, une porte humaine sur l'irréversible." width="100%"></picture>
+
 **Tirer 100 % de ce que mes modèles savent faire, et donner à mes agents des outils qu'ils peuvent réellement utiliser.**
 
 Ce dépôt est une **vitrine**. Il expose l'architecture de décision et les garde-fous, pas l'installation. Aucune clé, aucun point d'accès, aucune adresse, aucune configuration exécutable. Le dépôt exploité reste privé.
 
-Dernière mise à jour : <!-- mesure:maj -->10/11/2026<!-- /mesure -->. Avancement daté : [journal](JOURNAL.md).
+Dernière mise à jour : <!-- mesure:maj -->11/11/2026<!-- /mesure -->. Avancement daté : [journal](JOURNAL.md).
 
 ---
 
@@ -244,4 +246,5 @@ Voir aussi **[Infrastructure](https://github.com/TimoLeDozo/Infrastructure)** : 
 ## Auteur
 
 Timothé Cagin, ingénieur diplômé ICAM
-[ICARUS](https://icarus-ia.fr) · [LinkedIn](https://www.linkedin.com/in/timoth%C3%A9-cagin-61a711225/)
+
+<a href="https://icarus-ia.fr"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/site-sombre.svg"><img src="assets/site-clair.svg" alt="ICARUS, icarus-ia.fr" height="44"></picture></a>&nbsp;<a href="https://www.linkedin.com/in/timoth%C3%A9-cagin-61a711225/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/linkedin-sombre.svg"><img src="assets/linkedin-clair.svg" alt="LinkedIn de Timothé Cagin" height="44"></picture></a>

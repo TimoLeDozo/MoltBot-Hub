@@ -4,6 +4,7 @@ Les étapes datées du Hub, publiées sans topologie.
 
 | Date | Ce qui a changé |
 |---|---|
+| 11/11/2026 | Moltbot-Hub : la recherche documentaire du RAG (réponses d'IA appuyées sur des documents retrouvés) atteint son objectif de qualité, avec un MRR de 0,861 (rang inverse moyen de la bonne réponse, 1 étant le maximum). |
 | 10/11/2026 | Moltbot-Hub : l'objectif de qualité de la recherche documentaire (RAG, génération augmentée par récupération) est atteint sur une branche de travail, avec un MRR (rang réciproque moyen de la bonne réponse) de 0,861. |
 | 09/11/2026 | Moltbot-Hub : l'objectif de qualité du RAG (génération augmentée par récupération de documents) est atteint, avec un MRR (rang réciproque moyen de la bonne réponse) de 0,861, mesuré sur une branche de travail pas encore fusionnée. |
 | 25/10/2026 | Un rôle écrit par IA. Missions de l'exécutant avec reçu JSON mesuré. Clonage de voix local en essai. Catalogue de 18 types de demandes clients, chacune chiffrée par la valeur mesurée chez le client |
